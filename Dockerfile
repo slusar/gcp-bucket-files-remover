@@ -1,7 +1,6 @@
 FROM node:8.15-alpine
 
 # Default env. variables
-ENV ARCH=amd64
 ENV CONFIG_GCS_SERVICE_ACCOUNT_FILE='/config/gcs_sa.json'
 
 VOLUME /config
