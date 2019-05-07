@@ -23,7 +23,7 @@ var main = (async function () {
         return;
     }
 
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.RCLONE_CONFIG_GCS_SERVICE_ACCOUNT_FILE;
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
     const storage = new Storage();
 
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
