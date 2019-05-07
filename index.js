@@ -38,16 +38,17 @@ var main = (async function () {
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
     var buckets;
     if (list && list != '') {
-        logger.debug(`Using provided buckets ${list}`);
+        logger.info(`Using provided buckets ${list}`);
 
         var arrBuckets = list.split(',');
         buckets = arrBuckets.map(name => {
             return storage.bucket(name);
         });
     } else {
-        logger.debug(`Using all user buckets`);
+        logger.info(`Using all user buckets`);
         buckets = Array.of(await storage.getBuckets());
     }
+    logger.info(buckets);
 
     const arrPaths = paths.split(',');
     arrPaths.map(path => {
@@ -57,7 +58,7 @@ var main = (async function () {
         };
         buckets.forEach(bucket => {
             bucket.getFiles(options).forEach(f => {
-                logger.debug(`deleting file ${f.name}`);
+                logger.info(`deleting file ${f.name}`);
                 f.delete();
             });
         });
