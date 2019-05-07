@@ -15,6 +15,11 @@ const logger = winston.createLogger({
 
 var main = (async function () {
 
+    console.log('start');
+    console.log(process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE);
+    console.log(process.env.GOOGLE_CLOUD_PROJECT);
+
+
     logConfiguration(logger);
 
     var paths = process.env.CONFIG_GCS_FILES_PATHS;
@@ -23,9 +28,12 @@ var main = (async function () {
         return;
     }
 
+    console.log('start 2');
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
-    const storage = new Storage();
+    console.log('start 3');
 
+    const storage = new Storage();
+    console.log('start 4');
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
     var buckets;
     if (list && list != '') {
