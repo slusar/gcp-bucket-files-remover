@@ -24,5 +24,5 @@ COPY . .
 #add chmod for permissions to run hack
 RUN ["chmod", "+x", "/usr/src/app/entrypoint.sh"]
 
-# COPY entrypoint.sh /
+COPY entrypoint.sh /
 ENTRYPOINT ["./entrypoint.sh"]
