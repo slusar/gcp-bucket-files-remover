@@ -18,12 +18,13 @@ var main = (async function () {
     console.log('start');
     console.log(process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE);
     console.log(process.env.GOOGLE_CLOUD_PROJECT);
-
+    console.log(process.env.CONFIG_GCS_FILES_PATHS);
 
     logConfiguration(logger);
-
+    console.log('logged');
     var paths = process.env.CONFIG_GCS_FILES_PATHS;
     if (!paths || paths === '') {
+        console.log(`no path specified. doing nothing.`);
         logger.debug(`no path specified. doing nothing.`);
         return;
     }
