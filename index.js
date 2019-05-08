@@ -52,7 +52,7 @@ async function processBucket(bucket, path) {
     logger.info(`Found ${files.length} files to delete`);
     logger.info(`Found ${files} `);
     await files.forEach(fileToDel => {
-        logger.info(${fileToDel});
+        logger.info(fileToDel);
         logger.info(`deleting file ${fileToDel.name}`);
         fileToDel.delete();
     });
