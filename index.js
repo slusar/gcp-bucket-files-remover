@@ -46,7 +46,9 @@ var main = (async function () {
         });
     } else {
         logger.info(`Using all user buckets`);
-        buckets = await storage.getBuckets();
+        storage.getBuckets().then(function(data) {
+            buckets = data[0];
+        });
     }
     logger.info(buckets.length);
 
