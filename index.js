@@ -36,7 +36,7 @@ var main = (async function () {
     const storage = new Storage();
     console.log('start 4');
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
-    var buckets = await getBuckets(list, buckets, storage);
+    const buckets = await getBuckets(list, storage);
     logger.info(buckets.length);
 
     const arrPaths = paths.split(',');
@@ -59,12 +59,13 @@ var main = (async function () {
 })
 ();
 
-async function getBuckets(list, buckets, storage) {
+async function getBuckets(list, storage) {
+    var buckets;
     if (list && list != '') {
         logger.info(`Using provided buckets ${list}`);
 
-        var arrBuckets = list.split(',');
-        await buckets = arrBuckets.map(name => {
+        var  arrBuckets = list.split(',');
+        buckets = await arrBuckets.map(name => {
             return storage.bucket(name);
         });
     } else {
