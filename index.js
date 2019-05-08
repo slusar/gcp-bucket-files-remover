@@ -44,7 +44,7 @@ var main = (async function () {
             files.forEach(fileToDel => {
                 logger.info(`deleting file ${fileToDel.name}`);
                 fileToDel.delete();
-            });}
+            });
         });
     });
     logger.info(`File deletion finished.`);
