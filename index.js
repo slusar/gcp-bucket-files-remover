@@ -27,29 +27,32 @@ var main = (async function () {
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
 
     const buckets = await getBuckets();
-    logger.info(buckets.length);
+    logger.info(`fetched ${buckets.length} buckets`);
 
     const arrPaths = paths.split(',');
     arrPaths.map(path => {
-        logger.info(`Removing files from path ${path}`);
-
-        var options = {
-            prefix: path,
-            delimiter: "/"
-        };
-        buckets.forEach(bucket => (async function (){
-            logger.info(`Removing from bucket ${bucket.name}`);
-            const files = await bucket.getFiles(options);
-            logger.info(`Found ${files.length} files to delete`);
-            files.forEach(fileToDel => {
-                logger.info(`deleting file ${fileToDel.name}`);
-                fileToDel.delete();
-            });
-        }));
+        buckets.forEach(bucket => processBucket(bucket, path));
     });
     logger.info(`File deletion finished.`);
 })
 ();
+
+async function processBucket(bucket, path) {
+    logger.info(`Removing files from path ${path}`);
+
+    var options = {
+        prefix: path,
+        delimiter: "/"
+    };
+
+    logger.info(`Removing from bucket ${bucket.name}`);
+    const files = await bucket.getFiles(options);
+    logger.info(`Found ${files.length} files to delete`);
+    files.forEach(fileToDel => {
+        logger.info(`deleting file ${fileToDel.name}`);
+        fileToDel.delete();
+    });
+}
 
 async function getBuckets() {
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
