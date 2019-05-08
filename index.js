@@ -27,10 +27,9 @@ var main = (async function () {
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
 
     const buckets = await getBuckets();
-    logger.info(`fetched ${buckets.length} buckets`);
+    logger.info(`Fetched ${buckets.length} buckets`);
 
-    const arrPaths = paths.split(',');
-    await arrPaths.map(path => {
+    await paths.split(',').forEach(path => {
         buckets.forEach(bucket => processBucket(bucket, path));
     });
     logger.info(`File deletion finished.`);
@@ -38,7 +37,7 @@ var main = (async function () {
 ();
 
 async function getFiles(bucket, options) {
-    var files;
+    var files = [];
     await bucket.getFiles(options).then(function (data) {
         files = data[0];
     });
