@@ -36,20 +36,7 @@ var main = (async function () {
     const storage = new Storage();
     console.log('start 4');
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
-    var buckets;
-    if (list && list != '') {
-        logger.info(`Using provided buckets ${list}`);
-
-        var arrBuckets = list.split(',');
-        buckets = arrBuckets.map(name => {
-            return storage.bucket(name);
-        });
-    } else {
-        logger.info(`Using all user buckets`);
-        storage.getBuckets().then(function(data) {
-            buckets = data[0];
-        });
-    }
+    var buckets = await getBuckets(list, buckets, storage);
     logger.info(buckets.length);
 
     const arrPaths = paths.split(',');
@@ -71,6 +58,23 @@ var main = (async function () {
     });
 })
 ();
+
+async function getBuckets(list, buckets, storage) {
+    if (list && list != '') {
+        logger.info(`Using provided buckets ${list}`);
+
+        var arrBuckets = list.split(',');
+        await buckets = arrBuckets.map(name => {
+            return storage.bucket(name);
+        });
+    } else {
+        logger.info(`Using all user buckets`);
+        await storage.getBuckets().then(function (data) {
+            buckets = data[0];
+        });
+    }
+    return buckets;
+}
 
 function logConfiguration(logger) {
     const config = {
