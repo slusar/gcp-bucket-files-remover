@@ -48,7 +48,9 @@ async function processBucket(bucket, path) {
     logger.info(`Removing from bucket ${bucket.name}`);
     const files = await bucket.getFiles(options);
     logger.info(`Found ${files.length} files to delete`);
-    files.forEach(fileToDel => {
+    logger.info(`Found ${files} `);
+    await files.forEach(fileToDel => {
+        logger.info(`to delete ${fileToDel}`);
         logger.info(`deleting file ${fileToDel.name}`);
         fileToDel.delete();
     });
