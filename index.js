@@ -46,20 +46,24 @@ var main = (async function () {
         });
     } else {
         logger.info(`Using all user buckets`);
-        buckets = Array.of(await storage.getBuckets());
+        buckets = await storage.getBuckets();
     }
-    logger.info(buckets);
+    logger.info(buckets.length);
 
     const arrPaths = paths.split(',');
     arrPaths.map(path => {
+        logger.info(`Removing files from path ${path}`);
+
         var options = {
             prefix: path,
             delimiter: "/"
         };
         buckets.forEach(bucket => {
-            bucket.getFiles(options).forEach(f => {
-                logger.info(`deleting file ${f.name}`);
-                f.delete();
+            logger.info(`Removing from bucket ${bucket.name}`);
+
+            bucket.getFiles(options).forEach(fileToDel => {
+                logger.info(`deleting file ${fileToDel.name}`);
+                fileToDel.delete();
             });
         });
     });
