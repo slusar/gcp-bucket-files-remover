@@ -15,28 +15,18 @@ const logger = winston.createLogger({
 
 var main = (async function () {
 
-    console.log('start');
-    console.log(process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE);
-    console.log(process.env.GOOGLE_CLOUD_PROJECT);
-    console.log(process.env.CONFIG_GCS_FILES_PATHS);
+    logger.info(`File deletion start.`);
 
     logConfiguration(logger);
-    console.log('logged');
+
     var paths = process.env.CONFIG_GCS_FILES_PATHS;
     if (!paths || paths === '') {
-        console.log(`no path specified. doing nothing.`);
-        logger.debug(`no path specified. doing nothing.`);
+        logger.info(`no path specified. doing nothing.`);
         return;
     }
-
-    console.log('start 2');
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
-    console.log('start 3');
 
-    const storage = new Storage();
-    console.log('start 4');
-    const list = process.env.CONFIG_GCS_BUCKETS_NAME;
-    const buckets = await getBuckets(list, storage);
+    const buckets = await getBuckets();
     logger.info(buckets.length);
 
     const arrPaths = paths.split(',');
@@ -49,18 +39,21 @@ var main = (async function () {
         };
         buckets.forEach(bucket => {
             logger.info(`Removing from bucket ${bucket.name}`);
-            const [files] = bucket.getFiles(options);
-            logger.info(`Founf ${files.length} files to delete`);
+            const files = bucket.getFiles(options);
+            logger.info(`Found ${files.length} files to delete`);
             files.forEach(fileToDel => {
                 logger.info(`deleting file ${fileToDel.name}`);
                 fileToDel.delete();
             });
         });
     });
+    logger.info(`File deletion finished.`);
 })
 ();
 
-async function getBuckets(list, storage) {
+async function getBuckets() {
+    const list = process.env.CONFIG_GCS_BUCKETS_NAME;
+    const storage = new Storage();
     var buckets;
     if (list && list != '') {
         logger.info(`Using provided buckets ${list}`);
