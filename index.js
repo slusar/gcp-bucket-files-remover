@@ -37,6 +37,14 @@ var main = (async function () {
 })
 ();
 
+async function getFiles(bucket, options) {
+    var files;
+    await bucket.getFiles(options).then(function (data) {
+        files = data[0];
+    });
+    return files;
+}
+
 async function processBucket(bucket, path) {
     logger.info(`Removing files from path ${path}`);
 
@@ -46,9 +54,7 @@ async function processBucket(bucket, path) {
     };
 
     logger.info(`Removing from bucket ${bucket.name}`);
-    var files = await bucket.getFiles(options).then(function(data) {
-        files = data[0];
-    })
+    const files = await getFiles(bucket, options);
     logger.info(`Found ${files.length} files to delete`);
     logger.info(`Found ${files} `);
     await files.forEach(fileToDel => {
