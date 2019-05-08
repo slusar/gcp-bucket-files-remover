@@ -37,7 +37,7 @@ var main = (async function () {
             prefix: path,
             delimiter: "/"
         };
-        buckets.forEach(bucket => async function (){
+        buckets.forEach(bucket => (async function (){
             logger.info(`Removing from bucket ${bucket.name}`);
             const files = await bucket.getFiles(options);
             logger.info(`Found ${files.length} files to delete`);
@@ -45,7 +45,7 @@ var main = (async function () {
                 logger.info(`deleting file ${fileToDel.name}`);
                 fileToDel.delete();
             });
-        });
+        }));
     });
     logger.info(`File deletion finished.`);
 })
