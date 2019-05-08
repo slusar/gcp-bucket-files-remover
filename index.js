@@ -49,8 +49,9 @@ var main = (async function () {
         };
         buckets.forEach(bucket => {
             logger.info(`Removing from bucket ${bucket.name}`);
-
-            bucket.getFiles(options).forEach(fileToDel => {
+            const [files] = bucket.getFiles(options);
+            logger.info(`Founf ${files.length} files to delete`);
+            files.forEach(fileToDel => {
                 logger.info(`deleting file ${fileToDel.name}`);
                 fileToDel.delete();
             });
@@ -64,7 +65,7 @@ async function getBuckets(list, storage) {
     if (list && list != '') {
         logger.info(`Using provided buckets ${list}`);
 
-        var  arrBuckets = list.split(',');
+        var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
             return storage.bucket(name);
         });
