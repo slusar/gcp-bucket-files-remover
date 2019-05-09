@@ -19,7 +19,7 @@ var main = (async function () {
 
     logConfiguration(logger);
 
-    var paths = process.env.CONFIG_GCS_FILES_PATHS;
+    const paths = process.env.CONFIG_GCS_FILES_PATHS;
     if (!paths || paths === '') {
         logger.info(`no path specified. doing nothing.`);
         return;
@@ -28,16 +28,16 @@ var main = (async function () {
 
     const buckets = await getBuckets();
     logger.info(`Fetched ${buckets.length} buckets`);
-
-    await paths.split(',').forEach(path => {
-        buckets.forEach(bucket => processBucket(bucket, path));
-    });
+    const pathsArr = paths.split(',');
+    for (const path of pathsArr) {
+        await buckets.forEach(bucket => processBucket(bucket, path));
+    };
     logger.info(`File deletion finished.`);
 })
 ();
 
 async function getFiles(bucket, options) {
-    var files = [];
+    let files = [];
     await bucket.getFiles(options).then(function (data) {
         files = data[0];
     });
@@ -64,7 +64,7 @@ async function processBucket(bucket, path) {
 async function getBuckets() {
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
     const storage = new Storage();
-    var buckets;
+    let buckets;
     if (list && list != '') {
         logger.info(`Using provided buckets ${list}`);
 
