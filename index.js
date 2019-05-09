@@ -30,8 +30,11 @@ var main = (async function () {
     logger.info(`Fetched ${buckets.length} buckets`);
     const pathsArr = paths.split(',');
     for (const path of pathsArr) {
-        await buckets.forEach(bucket => processBucket(bucket, path));
-    };
+        for (bucket of buckets) {
+            await processBucket(bucket, path)
+        }
+    }
+
     logger.info(`File deletion finished.`);
 })
 ();
@@ -55,7 +58,7 @@ async function processBucket(bucket, path) {
     logger.info(`Removing from bucket ${bucket.name}`);
     const files = await getFiles(bucket, options);
     logger.info(`Found ${files.length} files to delete`);
-    await files.forEach(fileToDel => {
+    files.forEach(fileToDel => {
         logger.info(`deleting file ${fileToDel.name}`);
         fileToDel.delete();
     });
