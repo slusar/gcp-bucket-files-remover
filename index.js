@@ -73,11 +73,13 @@ async function getBuckets() {
 
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
-            logger.info(`Getting bucket ${name}`);
-            let buc = storage.bucket(name);
-            logger.info(`bucketname is ${buc.name}`);
+            let buc = null;
+            storage.bucket(name).exist().then(function (data) {
+                buc = data[0];
+            }
+            logger.info(`Getting bucket ${name} and found bucket ${buc != null}`);
             return buc;
-        });
+        }).filter(buc => buc != null);
     } else {
         logger.info(`Using all user buckets`);
         await storage.getBuckets().then(function (data) {
