@@ -73,7 +73,12 @@ async function getBuckets() {
 
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
-            var buc = storage.bucket(name);
+            let buc;
+            logger.info(`Getting bucket ${name}`);
+            storage.bucket(name).then(function (data) {
+                logger.info(`bucket is ${buc}`);
+                buc = data[0];
+            })
             logger.info(buc);
             return buc;
         });
@@ -83,7 +88,6 @@ async function getBuckets() {
             buckets = data[0];
         });
     }
-    logger.info(buckets);
     return buckets;
 }
 
