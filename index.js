@@ -73,7 +73,9 @@ async function getBuckets() {
 
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
-            return storage.bucket(name);
+            var buc = storage.bucket(name);
+            logger.info(buc);
+            return buc;
         });
     } else {
         logger.info(`Using all user buckets`);
@@ -81,6 +83,7 @@ async function getBuckets() {
             buckets = data[0];
         });
     }
+    logger.info(buckets);
     return buckets;
 }
 
