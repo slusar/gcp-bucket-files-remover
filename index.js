@@ -76,7 +76,7 @@ async function getBuckets() {
             let buc = null;
             storage.bucket(name).exist().then(function (data) {
                 buc = data[0];
-            }
+            });
             logger.info(`Getting bucket ${name} and found bucket ${buc != null}`);
             return buc;
         }).filter(buc => buc != null);
