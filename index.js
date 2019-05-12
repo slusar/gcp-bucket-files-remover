@@ -75,7 +75,8 @@ async function getBuckets() {
         buckets = await arrBuckets.map(name => {
             let buc = null;
             const bucket = storage.bucket(name);
-            bucket.exist().then(function (data) {
+
+            bucket.exists().then(function (data) {
                 buc = data[0];
             });
             logger.info(`Getting bucket ${name} and found bucket ${buc != null}`);
