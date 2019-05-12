@@ -74,7 +74,7 @@ async function getBuckets() {
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
             logger.info(`Getting bucket ${name}`);
-            let buc = storage.bucket(name)
+            let buc = storage.bucket(name);
             logger.info(`bucketname is ${buc.name}`);
             return buc;
         });
