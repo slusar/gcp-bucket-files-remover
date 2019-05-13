@@ -43,7 +43,8 @@ async function getFiles(bucket, options) {
     let files = [];
     await bucket.getFiles(options).then(function (data) {
         files = data[0];
-    });
+    }).catch(err => logger.error(err));
+    ;
     return files;
 }
 
@@ -74,11 +75,9 @@ async function getBuckets() {
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(name => {
             let buc = null;
-            const bucket = storage.bucket(name);
-
-            bucket.exists().then(function (data) {
+            storage.bucket(name).exists().then(function (data) {
                 buc = data[0];
-            });
+            }).catch(err => logger.error(err));
             logger.info(`Getting bucket ${name} and found bucket ${buc != null}`);
             return buc;
         }).filter(buc => buc != null);
