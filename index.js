@@ -69,23 +69,27 @@ async function getBuckets() {
     const list = process.env.CONFIG_GCS_BUCKETS_NAME;
     const storage = new Storage();
     let buckets;
+    await storage.getBuckets().then(function (data) {
+        buckets = data[0];
+    });
     if (list && list != '') {
         logger.info(`Using provided buckets ${list}`);
-
         var arrBuckets = list.split(',');
-        buckets = await arrBuckets.map(name => {
-            let buc = null;
-            storage.bucket(name).exists().then(function (data) {
-                buc = data[0];
-            }).catch(err => logger.error(err));
-            logger.info(`Getting bucket ${name} and found bucket ${buc != null}`);
-            return buc;
-        }).filter(buc => buc != null);
+        if (buckets) {
+            buckets = buckets.filter(bucket => {
+                let existMatch = false;
+                arrBuckets.forEach(bName => {
+                    if (bucket.name.match(bName)) {
+                        existMatch = true;
+                    }
+
+                });
+                logger.info(`Cheking bucket name ${bName} and found bucket ${existMatch === true ? bucket.name : ""}`);
+                return existMatch;
+            });
+        }
     } else {
         logger.info(`Using all user buckets`);
-        await storage.getBuckets().then(function (data) {
-            buckets = data[0];
-        });
     }
     return buckets;
 }
