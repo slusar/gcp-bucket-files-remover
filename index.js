@@ -142,7 +142,7 @@ async function getBucketsByName() {
 function logConfiguration(logger) {
     const config = {
         CONFIG_GCS_BUCKET_NAMES: process.env.CONFIG_GCS_BUCKET_NAMES,
-        CONFIG_GCS_BUCKET_NAME_FILTER: proces.env.CONFIG_GCS_BUCKET_NAME_FILTER,
+        CONFIG_GCS_BUCKET_NAME_FILTER: process.env.CONFIG_GCS_BUCKET_NAME_FILTER,
         CONFIG_GCS_FILES_PATHS: process.env.CONFIG_GCS_FILES_PATHS,
     };
     logger.info(config);
