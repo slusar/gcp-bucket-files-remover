@@ -35,15 +35,15 @@ var main = (async function () {
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
 
     let bucketsByName = await getBucketsByName();
-    logger.info(`Fetched ${bucketsByName.length} buckets by name`);
+    logger.info(`Fetched ${bucketsByName ? bucketsByName.length : 0 } buckets by name`);
     let bucketsByFilter = await getBucketsByFilter();
-    logger.info(`Fetched ${bucketsByFilter.length} buckets by filter`);
+    logger.info(`Fetched ${bucketsByFilter ? bucketsByFilter.length : 0} buckets by filter`);
 
     let buckets;
-    if (bucketsByName != null && bucketsByFilter != null) {
+    if (bucketsByName && bucketsByFilter) {
         buckets = bucketsByFilter.filter(bByFilter => bucketsByName.contains(bByFilter));
         logger.info(`Combined buckets size ${buckets.length}`);
-    } else if (bucketsByFilter != null) {
+    } else if (bucketsByFilter) {
         buckets = bucketsByFilter;
     } else {
         buckets = bucketsByName;
@@ -94,7 +94,7 @@ async function getBucketsByFilter() {
 
     if (filter && filter != '') {
         await storage.getBuckets().then(function (data) {
-            buckets = data[0];
+            bucbucketsByNamekets = data[0];
         });
         logger.info(`Using provided buckets filter ${list}`);
         var arrBuckets = list.split(',');
