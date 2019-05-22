@@ -96,8 +96,8 @@ async function getBucketsByFilter() {
         await storage.getBuckets().then(function (data) {
             bucbucketsByNamekets = data[0];
         });
-        logger.info(`Using provided buckets filter ${list}`);
-        var arrBuckets = list.split(',');
+        logger.info(`Using provided buckets filter ${filter}`);
+        var arrBuckets = filter.split(',');
         if (buckets) {
             buckets = buckets.filter(bucket => {
                 let existMatch = false;
