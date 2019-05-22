@@ -19,6 +19,14 @@ var main = (async function () {
 
     logConfiguration(logger);
 
+    const names = process.env.CONFIG_GCS_BUCKET_NAMES;
+    const nameFilter = process.env.CONFIG_GCS_BUCKET_NAME_FILTER;
+
+    if ((!names || names === '') && (!nameFilter || nameFilter === '')) {
+        logger.info(`no names or filters for buckets specified. doing nothing.`);
+        return;
+    }
+
     const paths = process.env.CONFIG_GCS_FILES_PATHS;
     if (!paths || paths === '') {
         logger.info(`no path specified. doing nothing.`);
@@ -26,12 +34,26 @@ var main = (async function () {
     }
     process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.CONFIG_GCS_SERVICE_ACCOUNT_FILE;
 
-    const buckets = await getBuckets();
-    logger.info(`Fetched ${buckets.length} buckets`);
+    let bucketsByName = await getBucketsByName();
+    logger.info(`Fetched ${bucketsByName.length} buckets by name`);
+    let bucketsByFilter = await getBucketsByFilter();
+    logger.info(`Fetched ${bucketsByFilter.length} buckets by filter`);
+
+    let buckets;
+    if (bucketsByName != null && bucketsByFilter != null) {
+        buckets = bucketsByFilter.filter(bByFilter => bucketsByName.contains(bByFilter));
+        logger.info(`Combined buckets size ${buckets.length}`);
+    } else if (bucketsByFilter != null) {
+        buckets = bucketsByFilter;
+    } else {
+        buckets = bucketsByName;
+    }
+
     const pathsArr = paths.split(',');
     for (const path of pathsArr) {
         for (bucket of buckets) {
-            await processBucket(bucket, path)
+            await
+                processBucket(bucket, path)
         }
     }
 
@@ -65,15 +87,16 @@ async function processBucket(bucket, path) {
     });
 }
 
-async function getBuckets() {
-    const list = process.env.CONFIG_GCS_BUCKETS_NAME;
+async function getBucketsByFilter() {
     const storage = new Storage();
     let buckets;
-    await storage.getBuckets().then(function (data) {
-        buckets = data[0];
-    });
-    if (list && list != '') {
-        logger.info(`Using provided buckets ${list}`);
+    const filter = process.env.CONFIG_GCS_BUCKET_NAME_FILTER;
+
+    if (filter && filter != '') {
+        await storage.getBuckets().then(function (data) {
+            buckets = data[0];
+        });
+        logger.info(`Using provided buckets filter ${list}`);
         var arrBuckets = list.split(',');
         if (buckets) {
             buckets = buckets.filter(bucket => {
@@ -82,21 +105,44 @@ async function getBuckets() {
                     if (bucket.name.match(bName)) {
                         existMatch = true;
                     }
-
                 });
                 logger.info(`Cheking bucket name ${bName} and found bucket ${existMatch === true ? bucket.name : ""}`);
                 return existMatch;
             });
         }
     } else {
-        logger.info(`Using all user buckets`);
+        logger.info(`No filter for buckets specified`);
     }
     return buckets;
 }
 
+async function getBucketsByName() {
+    const list = process.env.CONFIG_GCS_BUCKET_NAMES;
+    const storage = new Storage();
+    let buckets;
+    if (list && list != '') {
+        logger.info(`Using provided buckets list ${list}`);
+
+        var arrBuckets = list.split(',');
+        buckets = await arrBuckets.map(name => {
+            let buc = null;
+            storage.bucket(name).exists().then(function (data) {
+                buc = data[0];
+            }).catch(err => logger.error(err));
+            logger.info(`Getting bucket ${name} and ${(buc != null ? 'is ' : 'not')} found `);
+            return buc;
+        }).filter(buc => buc != null);
+    } else {
+        logger.info(`No bucket names list specified`);
+    }
+    return buckets;
+}
+
+
 function logConfiguration(logger) {
     const config = {
-        CONFIG_GCS_BUCKETS_NAME: process.env.CONFIG_GCS_BUCKETS_NAME,
+        CONFIG_GCS_BUCKET_NAMES: process.env.CONFIG_GCS_BUCKET_NAMES,
+        CONFIG_GCS_BUCKET_NAME_FILTER: proces.env.CONFIG_GCS_BUCKET_NAME_FILTER,
         CONFIG_GCS_FILES_PATHS: process.env.CONFIG_GCS_FILES_PATHS,
     };
     logger.info(config);
