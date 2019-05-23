@@ -41,7 +41,8 @@ var main = (async function () {
 
     let buckets;
     if (bucketsByName && bucketsByFilter) {
-        const namesOfBuickets = bucketsByName.map(buck => buck.name);
+        const namesOfBuickets = bucketsByName.map(function (buck){ return buck.name});
+        logger.info(`namesOfBuickets ${namesOfBuickets}`);
         buckets = bucketsByFilter.filter(bByFilter => namesOfBuickets.includes(bByFilter.name));
         logger.info(`Combined buckets size ${buckets.length}`);
     } else if (bucketsByFilter) {
