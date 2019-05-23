@@ -144,9 +144,10 @@ async function getBucketsByName() {
                 }
 
             }).catch(err => logger.error(err));
-        }).filter(buck => {
-            return buck != null
         });
+        //     .filter(buck => {
+        //     return buck != null
+        // });
     } else {
         logger.info(`No bucket names list specified`);
     }
