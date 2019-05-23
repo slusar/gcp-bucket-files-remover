@@ -42,7 +42,7 @@ var main = (async function () {
     let buckets;
     if (bucketsByName && bucketsByFilter) {
         logger.info(`bucketsByName ${bucketsByName} `);
-        const namesOfBuickets = await Promise.all( bucketsByName.map((buck, i, bucketsByName) => {
+        const namesOfBuickets = await Promise.all(bucketsByName.map((buck, i, bucketsByName) => {
             logger.info(`bucketsByName ${buck}`);
             logger.info(`bucketsByName ${buck.name}`);
             return buck.name
@@ -145,17 +145,12 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await Promise.all(arrBuckets.map(async (name, i, arrBuckets) => {
+        buckets = await Promise.all(arrBuckets.map(async (name) => {
             const checked = await storage.bucket(name);
-
-            return await getT(checked, name).then(function (data) {
-                logger.info(` ddata ${data}`);
-                return data[0];
-            });
+            return await getT(checked, name);
+        }).filter(buck => {
+            return buck != null
         }));
-        //     .filter(buck => {
-        //     return buck != null
-        // });
     } else {
         logger.info(`No bucket names list specified`);
     }
