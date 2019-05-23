@@ -107,7 +107,7 @@ async function getBucketsByFilter() {
                     if (bucket.name.match(bName)) {
                         existMatch = true;
                     }
-                    logger.info(`Cheking bucket name ${bName} and found bucket ${existMatch === true ? bucket.name : ""}`);
+                    logger.info(`Cheking bucket name ${bName} and found ${existMatch === true ? bucket.name : "no"} bucket`);
                 });
                 return existMatch;
             });
@@ -126,14 +126,14 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await arrBuckets.map(name => {
+        buckets = await arrBuckets.map(function(name){
             let buc = null;
             storage.bucket(name).exists().then(function (data) {
                 buc = data[0];
+                logger.info(`Getting bucket ${name} and found`);
             }).catch(err => logger.error(err));
-            logger.info(`Getting bucket ${name} and ${(buc != null ? 'is ' : 'not')} found `);
             return buc;
-        }).filter(buc => buc != null);
+        }).filter(buc => {return buc != null});
     } else {
         logger.info(`No bucket names list specified`);
     }
