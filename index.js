@@ -60,40 +60,38 @@ var main = (async function () {
     }
 
     const pathsArr = paths.split(',');
-    for (const path of pathsArr) {
+
         for (bucket of buckets) {
             await
-                processBucket(bucket, path)
+                processBucket(bucket, pathsArr);
         }
-    }
+
 
     logger.info(`File deletion finished.`);
 })
 ();
 
-async function getFiles(bucket, options) {
+async function getFiles(bucket) {
     let files = [];
-    await bucket.getFiles(options).then(function (data) {
+    await bucket.getFiles().then(function (data) {
         files = data[0];
     }).catch(err => logger.error(err));
     ;
     return files;
 }
 
-async function processBucket(bucket, path) {
-    logger.info(`Removing files from path ${path}`);
+async function processBucket(bucket, paths) {
+    logger.info(`Removing files from  ${bucket.name} for paths ${paths}`);
 
-    var options = {
-        prefix: path,
-        delimiter: "/"
-    };
-
-    logger.info(`Removing from bucket ${bucket.name}`);
-    const files = await getFiles(bucket, options);
+    const files = await getFiles(bucket);
     logger.info(`Found ${files.length} files to delete`);
     files.forEach(fileToDel => {
-        logger.info(`deleting file ${fileToDel.name}`);
-        fileToDel.delete();
+        for (const path of pathsArr) {
+            if(fileToDel.name.match(path)){
+                logger.info(`deleting file ${fileToDel.name}`);
+                fileToDel.delete();
+            }
+        }
     });
 }
 
