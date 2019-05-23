@@ -60,12 +60,10 @@ var main = (async function () {
     }
 
     const pathsArr = paths.split(',');
-
-        for (bucket of buckets) {
-            await
-                processBucket(bucket, pathsArr);
-        }
-
+    for (bucket of buckets) {
+        await
+            processBucket(bucket, pathsArr);
+    }
 
     logger.info(`File deletion finished.`);
 })
@@ -80,14 +78,14 @@ async function getFiles(bucket) {
     return files;
 }
 
-async function processBucket(bucket, paths) {
-    logger.info(`Removing files from  ${bucket.name} for paths ${paths}`);
+async function processBucket(bucket, pathsArr) {
+    logger.info(`Removing files from  ${bucket.name} for paths ${pathsArr}`);
 
     const files = await getFiles(bucket);
     logger.info(`Found ${files.length} files to delete`);
     files.forEach(fileToDel => {
         for (const path of pathsArr) {
-            if(fileToDel.name.match(path)){
+            if (fileToDel.name.match(path)) {
                 logger.info(`deleting file ${fileToDel.name}`);
                 fileToDel.delete();
             }
