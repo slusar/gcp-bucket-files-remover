@@ -94,7 +94,7 @@ async function getBucketsByFilter() {
 
     if (filter && filter != '') {
         await storage.getBuckets().then(function (data) {
-            bucbucketsByNamekets = data[0];
+            buckets = data[0];
         });
         logger.info(`Using provided buckets filter ${filter}`);
         var arrBuckets = filter.split(',');
