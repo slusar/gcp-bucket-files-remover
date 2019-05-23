@@ -151,6 +151,7 @@ async function getBucketsByName() {
     } else {
         logger.info(`No bucket names list specified`);
     }
+    logger.info(`buckets ${buckets}`);
     return buckets;
 }
 
