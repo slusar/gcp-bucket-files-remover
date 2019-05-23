@@ -136,13 +136,12 @@ async function getBucketsByName() {
         var arrBuckets = list.split(',');
         buckets = await arrBuckets.map(async function (name) {
             const checked = await storage.bucket(name);
-            await checked.exists().then(function (data) {
+            return await checked.exists().then(function (data) {
                 //boolean if bucket exists
                 if (data[0]) {
                     logger.info(`Getting bucket ${name} and found ${checked.name}`);
                     return checked;
                 }
-
             }).catch(err => logger.error(err));
         });
         //     .filter(buck => {
