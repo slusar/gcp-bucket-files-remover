@@ -41,8 +41,10 @@ var main = (async function () {
 
     let buckets;
     if (bucketsByName && bucketsByFilter) {
-        const namesOfBuickets = bucketsByName.map(function (buck){
-            logger.info(`bucketsByName ${buck.name} `);
+        logger.info(`bucketsByName ${bucketsByName} `);
+        const namesOfBuickets = await bucketsByName.map(function (buck){
+            logger.info(`bucketsByName ${buck}`);
+            logger.info(`bucketsByName ${buck.name}`);
             return buck.name});
         logger.info(`namesOfBuickets ${namesOfBuickets}`);
         buckets = bucketsByFilter.filter(bByFilter => {
@@ -134,7 +136,7 @@ async function getBucketsByName() {
             let buc = null;
             await storage.bucket(name).exists().then(function (data) {
                 buc = data[0];
-                logger.info(`Getting bucket ${name} and found`);
+                logger.info(`Getting bucket ${name} and found ${buc.name}`);
                 return buc;
             }).catch(err => logger.error(err));
         }).filter(buc => {return buc != null});
