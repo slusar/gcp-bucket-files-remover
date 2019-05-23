@@ -140,7 +140,7 @@ async function getBucketsByName() {
             await checked.exists().then(function (data) {
                 //boolean if bucket exists
                 if (data[0]) {
-                    logger.info(`Getting bucket ${name} and found ${buc.name}`);
+                    logger.info(`Getting bucket ${name} and found ${checked.name}`);
                     buc = checked;
                 }
             }).catch(err => logger.error(err));
