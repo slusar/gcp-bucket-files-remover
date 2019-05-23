@@ -105,8 +105,8 @@ async function getBucketsByFilter() {
                     if (bucket.name.match(bName)) {
                         existMatch = true;
                     }
+                    logger.info(`Cheking bucket name ${bName} and found bucket ${existMatch === true ? bucket.name : ""}`);
                 });
-                logger.info(`Cheking bucket name ${bName} and found bucket ${existMatch === true ? bucket.name : ""}`);
                 return existMatch;
             });
         }
