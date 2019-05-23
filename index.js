@@ -41,9 +41,13 @@ var main = (async function () {
 
     let buckets;
     if (bucketsByName && bucketsByFilter) {
-        const namesOfBuickets = bucketsByName.map(function (buck){ return buck.name});
+        const namesOfBuickets = bucketsByName.map(function (buck){
+            logger.info(`bucketsByName ${buck.name} `);
+            return buck.name});
         logger.info(`namesOfBuickets ${namesOfBuickets}`);
-        buckets = bucketsByFilter.filter(bByFilter => namesOfBuickets.includes(bByFilter.name));
+        buckets = bucketsByFilter.filter(bByFilter => {
+            logger.info(`namesOfBuickets.includes(${bByFilter.name}) ${namesOfBuickets.includes(bByFilter.name)} `);
+            namesOfBuickets.includes(bByFilter.name)});
         logger.info(`Combined buckets size ${buckets.length}`);
     } else if (bucketsByFilter) {
         buckets = bucketsByFilter;
