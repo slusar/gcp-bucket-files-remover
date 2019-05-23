@@ -42,14 +42,16 @@ var main = (async function () {
     let buckets;
     if (bucketsByName && bucketsByFilter) {
         logger.info(`bucketsByName ${bucketsByName} `);
-        const namesOfBuickets = await bucketsByName.map(function (buck){
+        const namesOfBuickets = await bucketsByName.map(function (buck) {
             logger.info(`bucketsByName ${buck}`);
             logger.info(`bucketsByName ${buck.name}`);
-            return buck.name});
+            return buck.name
+        });
         logger.info(`namesOfBuickets ${namesOfBuickets}`);
         buckets = bucketsByFilter.filter(bByFilter => {
             logger.info(`namesOfBuickets.includes(${bByFilter.name}) ${namesOfBuickets.includes(bByFilter.name)} `);
-            namesOfBuickets.includes(bByFilter.name)});
+            namesOfBuickets.includes(bByFilter.name)
+        });
         logger.info(`Combined buckets size ${buckets.length}`);
     } else if (bucketsByFilter) {
         buckets = bucketsByFilter;
@@ -132,14 +134,19 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await arrBuckets.map(async function(name){
+        buckets = await arrBuckets.map(async function (name) {
             let buc = null;
-            await storage.bucket(name).exists().then(function (data) {
-                buc = data[0];
-                logger.info(`Getting bucket ${name} and found ${buc.name}`);
-                return buc;
+            const checked = storage.bucket(name);
+            await checked.exists().then(function (data) {
+                //boolean if bucket exists
+                if (data[0]) {
+                    logger.info(`Getting bucket ${name} and found ${buc.name}`);
+                    buc = checked;
+                }
             }).catch(err => logger.error(err));
-        }).filter(buc => {return buc != null});
+        }).filter(buc => {
+            return buc != null
+        });
     } else {
         logger.info(`No bucket names list specified`);
     }
