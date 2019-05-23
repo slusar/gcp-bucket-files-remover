@@ -131,8 +131,9 @@ async function getBucketsByName() {
             storage.bucket(name).exists().then(function (data) {
                 buc = data[0];
                 logger.info(`Getting bucket ${name} and found`);
+                return buc;
             }).catch(err => logger.error(err));
-            return buc;
+
         }).filter(buc => {return buc != null});
     } else {
         logger.info(`No bucket names list specified`);
