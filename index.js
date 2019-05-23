@@ -50,7 +50,7 @@ var main = (async function () {
         logger.info(`namesOfBuickets ${namesOfBuickets}`);
         buckets = bucketsByFilter.filter(bByFilter => {
             logger.info(`namesOfBuickets.includes(${bByFilter.name}) ${namesOfBuickets.includes(bByFilter.name)} `);
-            namesOfBuickets.includes(bByFilter.name)
+            return namesOfBuickets.includes(bByFilter.name)
         });
         logger.info(`Combined buckets size ${buckets.length}`);
     } else if (bucketsByFilter) {
