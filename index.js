@@ -41,15 +41,10 @@ var main = (async function () {
 
     let buckets;
     if (bucketsByName && bucketsByFilter) {
-        logger.info(`bucketsByName ${bucketsByName} `);
         const namesOfBuickets = await Promise.all(bucketsByName.map((buck, i, bucketsByName) => {
-            logger.info(`bucketsByName ${buck}`);
-            logger.info(`bucketsByName ${buck.name}`);
             return buck.name
         }));
-        logger.info(`namesOfBuickets ${namesOfBuickets}`);
         buckets = bucketsByFilter.filter(bByFilter => {
-            logger.info(`namesOfBuickets.includes(${bByFilter.name}) ${namesOfBuickets.includes(bByFilter.name)} `);
             return namesOfBuickets.includes(bByFilter.name)
         });
         logger.info(`Combined buckets size ${buckets.length}`);
@@ -74,7 +69,6 @@ async function getFiles(bucket) {
     await bucket.getFiles().then(function (data) {
         files = data[0];
     }).catch(err => logger.error(err));
-    ;
     return files;
 }
 
@@ -111,7 +105,6 @@ async function getBucketsByFilter() {
                     if (bucket.name.match(bName)) {
                         existMatch = true;
                     }
-                    logger.info(`Cheking bucket name ${bName} and found ${existMatch === true ? bucket.name : "no"} bucket`);
                 });
                 return existMatch;
             });
@@ -131,7 +124,6 @@ async function getBucketsByName() {
         return await checked.exists().then(function (data) {
             //boolean if bucket exists
             if (data[0]) {
-                logger.info(`Getting bucket ${name} and found ${checked.name}`);
                 return checked;
             }
         }).catch(err => logger.error(err));
@@ -150,7 +142,6 @@ async function getBucketsByName() {
     } else {
         logger.info(`No bucket names list specified`);
     }
-    logger.info(`buckets ${buckets}`);
     return buckets;
 }
 
