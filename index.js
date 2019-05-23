@@ -42,7 +42,7 @@ var main = (async function () {
     let buckets;
     if (bucketsByName && bucketsByFilter) {
         logger.info(`bucketsByName ${bucketsByName} `);
-        const namesOfBuickets = await bucketsByName.map(function (buck) {
+        const namesOfBuickets = await bucketsByName.map((buck, i, bucketsByName) => {
             logger.info(`bucketsByName ${buck}`);
             logger.info(`bucketsByName ${buck.name}`);
             return buck.name
@@ -145,9 +145,9 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await arrBuckets.map(async function (name) {
+        buckets = await arrBuckets.map(async (name, i, arrBuckets) => {
             const checked = await storage.bucket(name);
-            return await getT(checked, name).then(function (data){
+            return await getT(checked, name).then(function (data) {
                 return data[0];
             });
         });
