@@ -126,14 +126,13 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await arrBuckets.map(function(name){
+        buckets = await arrBuckets.map(async function(name){
             let buc = null;
-            storage.bucket(name).exists().then(function (data) {
+            await storage.bucket(name).exists().then(function (data) {
                 buc = data[0];
                 logger.info(`Getting bucket ${name} and found`);
                 return buc;
             }).catch(err => logger.error(err));
-
         }).filter(buc => {return buc != null});
     } else {
         logger.info(`No bucket names list specified`);
