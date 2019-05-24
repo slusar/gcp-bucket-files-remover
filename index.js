@@ -123,7 +123,7 @@ async function getBucketsByName() {
     async function getSingleBucket(checked, name) {
         return await checked.exists().then(function (data) {
             //boolean if bucket exists
-            if (data[0]) {
+            if (data[0] === true) {
                 return checked;
             }
         }).catch(err => logger.error(err));
