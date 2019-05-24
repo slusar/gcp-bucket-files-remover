@@ -136,8 +136,8 @@ async function getBucketsByName() {
         buckets = await Promise.all(arrBuckets.map(async (name) => {
             const checked = await storage.bucket(name);
             return await getSingleBucket(checked, name);
-        }).filter(buck => {
-            return buck != null
+        }).filter(bucket => {
+            return bucket != null && bucket != undefined
         }));
     } else {
         logger.info(`No bucket names list specified`);
