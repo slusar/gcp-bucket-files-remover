@@ -120,11 +120,14 @@ async function getBucketsByName() {
     const storage = new Storage();
     let buckets;
 
-    async function getSingleBucket(checked, name) {
+    async function getSingleBucket(checked) {
         return await checked.exists().then(function (data) {
             //boolean if bucket exists
+            logger.info(`data[0] ${data[0]}`);
             if (data[0] === true) {
                 return checked;
+            } else {
+                return null;
             }
         }).catch(err => logger.error(err));
     }
@@ -135,7 +138,7 @@ async function getBucketsByName() {
         var arrBuckets = list.split(',');
         buckets = await Promise.all(arrBuckets.map(async (name) => {
             const checked = await storage.bucket(name);
-            return await getSingleBucket(checked, name);
+            return await getSingleBucket(checked);
         }).filter(bucket => {
             return bucket != null && bucket != undefined
         }));
