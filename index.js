@@ -41,11 +41,11 @@ var main = (async function () {
 
     let buckets;
     if (bucketsByName && bucketsByFilter) {
-        const namesOfBuickets = await Promise.all(bucketsByName.map((buck, i, bucketsByName) => {
-            return buck.name
+        const namesOfBuckets = await Promise.all(bucketsByName.map(bucket => {
+            return bucket.name
         }));
         buckets = bucketsByFilter.filter(bByFilter => {
-            return namesOfBuickets.includes(bByFilter.name)
+            return namesOfBuckets.includes(bByFilter.name)
         });
         logger.info(`Combined buckets size ${buckets.length}`);
     } else if (bucketsByFilter) {
@@ -120,7 +120,7 @@ async function getBucketsByName() {
     const storage = new Storage();
     let buckets;
 
-    async function getT(checked, name) {
+    async function getSingleBucket(checked, name) {
         return await checked.exists().then(function (data) {
             //boolean if bucket exists
             if (data[0]) {
@@ -135,7 +135,7 @@ async function getBucketsByName() {
         var arrBuckets = list.split(',');
         buckets = await Promise.all(arrBuckets.map(async (name) => {
             const checked = await storage.bucket(name);
-            return await getT(checked, name);
+            return await getSingleBucket(checked, name);
         }).filter(buck => {
             return buck != null
         }));
