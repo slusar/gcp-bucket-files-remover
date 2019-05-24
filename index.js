@@ -142,7 +142,7 @@ async function getBucketsByName() {
                 return await getSingleBucket(checked);
             }));
         buckets = buckets.filter(x => x);
-    )
+    
         ;
     } else {
         logger.info(`No bucket names list specified`);
