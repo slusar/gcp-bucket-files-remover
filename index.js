@@ -136,10 +136,14 @@ async function getBucketsByName() {
         logger.info(`Using provided buckets list ${list}`);
 
         var arrBuckets = list.split(',');
-        buckets = await Promise.all(arrBuckets.map(async (name) => {
-            const checked = await storage.bucket(name);
-            return await getSingleBucket(checked);
-        }).filter(x => x));
+        buckets = await Promise.all(
+            arrBuckets.map(async (name) => {
+                const checked = await storage.bucket(name);
+                return await getSingleBucket(checked);
+            }));
+        buckets = buckets.filter(x => x);
+    )
+        ;
     } else {
         logger.info(`No bucket names list specified`);
     }
