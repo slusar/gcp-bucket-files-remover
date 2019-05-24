@@ -123,7 +123,6 @@ async function getBucketsByName() {
     async function getSingleBucket(checked) {
         return await checked.exists().then(function (data) {
             //boolean if bucket exists
-            logger.info(`data[0] ${data[0]}`);
             if (data[0] === true) {
                 return checked;
             } else {
@@ -142,8 +141,6 @@ async function getBucketsByName() {
                 return await getSingleBucket(checked);
             }));
         buckets = buckets.filter(x => x);
-    
-        ;
     } else {
         logger.info(`No bucket names list specified`);
     }
