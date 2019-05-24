@@ -139,7 +139,7 @@ async function getBucketsByName() {
         buckets = await Promise.all(arrBuckets.map(async (name) => {
             const checked = await storage.bucket(name);
             return await getSingleBucket(checked);
-        }).filter(bucket => {
+        }).filter((bucket) => {
             return bucket != null && bucket != undefined
         }));
     } else {
