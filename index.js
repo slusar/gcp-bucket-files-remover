@@ -76,11 +76,11 @@ async function processBucket(bucket, pathsArr) {
     logger.info(`Removing files from  ${bucket.name} for paths ${pathsArr}`);
 
     const files = await getFiles(bucket);
-    logger.info(`Found ${files.length} files to delete`);
+    logger.info(`Found ${files.length} files in bucket`);
     files.forEach(fileToDel => {
         for (const path of pathsArr) {
             if (fileToDel.name.match(path)) {
-                logger.info(`deleting file ${fileToDel.name}`);
+                logger.info(`deleting file ${fileToDel.name} as it mtches path ${path}`);
                 fileToDel.delete();
             }
         }
